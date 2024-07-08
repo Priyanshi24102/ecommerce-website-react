@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
-function Header() {
+function Header(props) {
   return (
     <Navbar expand="lg" className="navbar">
       <Container fluid>
@@ -26,7 +26,8 @@ function Header() {
               <Link to="/contact" className="nav-link mx-3 fs-4">Contact</Link>
             </Nav.Item>
             <Nav.Item>
-              <Link to="/cart" className="nav-link mx-3 fs-4">Cart</Link>
+            <Link to="/cart" className="nav-link mx-3 fs-4">Cart <div className='cartQuantity'>({props.cartQuantity})</div></Link>
+
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
