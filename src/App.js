@@ -1,7 +1,7 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Header from './Components/Header';
 import Main from './Components/Main';
 import Footer from './Components/Footer';
@@ -10,12 +10,20 @@ import About from './Components/About';
 import Contact from './Components/Contact';
 import Cart from './Components/Cart';
 import ProductDetails from './Components/ProductDetails';
+import LoginPage from './Components/LoginPage';
+import Register from './Components/Register';
+import ProtectedRoute from './Components/ProtectedRoute';
 
-export default function App() {
+function App() {
   const [data, setData] = useState([]);
   const [cart, setCart] = useState([]);
   const [quantities, setQuantities] = useState({});
+  const [showHF,setshowHF]=useState(false);
+  const isLoggedIn = window.localStorage.getItem('loggedin') === 'true';
 
+  function showHeader(e){
+    setshowHF(e);
+  }
   useEffect(() => {
     fetch('https://fakestoreapi.com/products')
       .then((response) => response.json())
@@ -57,31 +65,59 @@ export default function App() {
     setCart(updatedCart);
   };
 
+  
   const cartQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Header cartQuantity={cartQuantity} />
+      {isLoggedIn && <Header cartQuantity={cartQuantity} showHeader={showHeader} />}
+
         <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/about" element={<About />} />
-          <Route
-            path="/shop"
-            element={<Shopping data={data} addToCart={addToCart} quantities={quantities} updateQuantity={updateQuantity} />}
-          />
-          <Route path="/contact" element={<Contact />} />
-          <Route
-            path="/cart"
-            element={<Cart cart={cart} removeItem={removeItem} updateQuantity={updateQuantity} />}
-          />
-          <Route
-            path="/product/:id"
-            element={<ProductDetails addToCart={addToCart} />}
-          />
+          {!isLoggedIn && (
+            <>
+              <Route path="/login" element={<LoginPage showHeader={showHeader}/>} />
+              <Route path="/register" element={<Register />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </>
+          )}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Main />} />
+            <Route path="*" element={<Main/>} />
+    
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/shop"
+              element={
+                <Shopping
+                  data={data}
+                  addToCart={addToCart}
+                  quantities={quantities}
+                  updateQuantity={updateQuantity}
+                />
+              }
+            />
+            <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/cart"
+              element={
+                <Cart
+                  cart={cart}
+                  removeItem={removeItem}
+                  updateQuantity={updateQuantity}
+                />
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={<ProductDetails addToCart={addToCart} />}
+            />
+          </Route>
         </Routes>
-        <Footer />
+        {isLoggedIn && <Footer />}
       </BrowserRouter>
     </div>
   );
 }
+
+export default App;

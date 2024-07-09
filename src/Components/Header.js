@@ -1,10 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
 function Header(props) {
+  const navigate=useNavigate()
+  function handleLogOut(){
+    props.showHeader(false);
+    localStorage.removeItem("loggedin");
+    window.location.href="/login"
+   
+    
+    // navigate("/login");
+  }
   return (
     <Navbar expand="lg" className="navbar">
       <Container fluid>
@@ -27,7 +36,10 @@ function Header(props) {
             </Nav.Item>
             <Nav.Item>
             <Link to="/cart" className="nav-link mx-3 fs-4">Cart <div className='cartQuantity'>({props.cartQuantity})</div></Link>
+            </Nav.Item>
 
+            <Nav.Item>
+              <button className='logoutBtn' onClick={handleLogOut} >LogOut</button>
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>

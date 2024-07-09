@@ -122,10 +122,7 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
 }
-.card:hover{
-  /* height: 440px; */
-  /* width: 370px; */
-}
+
 .shoppingContainer .card button{
   background-color: rgb(36, 138, 138);
     border: none;
@@ -463,4 +460,76 @@
   font-size: 15px;
   position: relative;
   bottom: 10px;
+}
+
+
+/* Login Page  */
+
+.loginContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-image: url('https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+}
+.loginBox{
+  background-color: rgb(245, 245, 245);
+  height: 69%;
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: rgba(184, 184, 184, 0.35) 0px 5px 15px;
+  gap: 10%;
+  border-radius: 15px;
+  font-size: 20px;
+  
+}
+.loginContainer input{
+  /* width: 100%; */
+  width: 300px;
+  padding: 2px;
+  margin: 3px 0px;
+  font-size: 15px;
+  background-color: white;
+  /* font-size: 15px; */
+}
+.loginBtn{
+  background-color: rgb(36, 138, 138);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  margin: 20px 0px;
+  width: 100%;
+  font-size: 20px;
+  box-sizing: border-box;
+}
+.loginBtn:hover{
+  color: rgb(36, 138, 138);
+  background-color: white;
+  border: 2px solid rgb(36, 138, 138);
+}
+.error{
+  color: red;
+}
+.logoutBtn{
+  border: none;
+  position: relative;
+  top: 13px;
+  font-size: 20px;
+}
+.loginText{
+  font-size: 12px;
+  color: black;
+}
+.loginBtn2{
+  border: none;
+  background-color: white;
+  color: blue;
 }
