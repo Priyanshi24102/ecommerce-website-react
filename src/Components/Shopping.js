@@ -1,12 +1,56 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Quantity from './Quantity';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, updateQuantity } from "../features/cartSlice";
 
-function Shopping({ data, addToCart, quantities, updateQuantity }) {
+function Shopping() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [data, setData] = useState([]);
+  const cartItems = useSelector((state) => state.cartItems );
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((item) => {   
+          item.quantity =  1;
+        });
+        setData(data);
+      });
+  }, [cartItems]);
 
   const handleAddToCart = (item) => {
-    addToCart({ ...item, quantity: quantities[item.id] });
+    const quantity = item.quantity ;
+    dispatch(addToCart({ ...item, quantity }));
+    const updatedData = data.map((dataItem) => {
+      if (dataItem.id === item.id) {
+        return { ...dataItem, quantity };
+      }
+      return dataItem;
+    });
+    setData(updatedData);
+    alert("Item Added to cart");
+  };
+
+  const incrementQuantity = (itemId) => {
+    const updatedData = data.map((item) => {
+      if (item.id === itemId) {
+        return { ...item, quantity: item.quantity + 1 };
+      }
+      return item;
+    });
+    setData(updatedData);
+  };
+
+  const decrementQuantity = (itemId) => {
+    const updatedData = data.map((item) => {
+      if (item.id === itemId && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    });
+    setData(updatedData);
   };
 
   return (
@@ -19,7 +63,7 @@ function Shopping({ data, addToCart, quantities, updateQuantity }) {
               src={item.image}
               alt="image"
               onClick={() => navigate(`/product/${item.id}`)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             />
             <p className="bold">
               {item.title.length > 35
@@ -28,12 +72,21 @@ function Shopping({ data, addToCart, quantities, updateQuantity }) {
             </p>
             <p>{`${item.description.slice(0, 40)}....`}</p>
             <p className="bold">{`Price: $${item.price}`}</p>
-            <Quantity
-              quantity={quantities[item.id]}
-              setQuantity={(newQuantity) =>
-                updateQuantity(item.id, newQuantity)
-              }
-            />
+            <div className="quantity">
+              <button
+                onClick={() => decrementQuantity(item.id)}
+                className="quantitybtn"
+              >
+                -
+              </button>
+              <span>{item.quantity}</span>
+              <button
+                onClick={() => incrementQuantity(item.id)}
+                className="quantitybtn"
+              >
+                +
+              </button>
+            </div>
             <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
           </div>
         ))}
